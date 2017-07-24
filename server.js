@@ -9,7 +9,7 @@ const api= require('./app/routes/api')(app,express);
 
 
 
-mongoose.connect(config.db_mlab, function(err){
+mongoose.connect(config.db_local, function(err){
 	if (err) {
 		console.log(err);
 	}

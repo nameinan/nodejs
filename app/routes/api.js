@@ -5,14 +5,14 @@ const jsonwebtoken = require('jsonwebtoken');
 
 function createToken(user){
       const token= jsonwebtoken.sign({
-          _id:user._id,
-          name:user.name,
-          username:user.username
-      },
-         supeSecret,
-         {
-          expirtesInMinutes:1440
-         }
+            _id:user._id,
+            name:user.name,
+            username:user.username
+          },
+         secretKey,
+            {
+               expiresIn:1440
+           }
       ) ;
       return token;      
 }
@@ -57,27 +57,27 @@ module.exports = function(app,express){
 
     api.post('/login',function(req,res){
       User.findOne({
-        username:req.body.username
+        name:req.body.name
       }).select('password').exec(function(err,user){
-          if (err) {throw err}
-          if (!users) {
+          if (err) {
+            throw err
+          }
+          if (!user) {
             res.send({message:'User does not exist'});
-                   else if (user) {
-            var validPassword= user.comparePassword(res.body.password);
-            if (!validPassword) {
-              res.send({message:'Invalid  Password'});
-            }
-            else{
-             const token = createToken(user);
-             res.json({
-                success:true,
-                message:'Successfull loggin!',
-                token: token
-             });
+          }else if (user) {
+                      var validPassword = user.comparePassword(req.body.password);
+                      if (!validPassword) {
+                       res.send({message:'Invalid  Password'});
+                  }
+                  else{
+                       const token = createToken(user);
+                       res.json({
+                          success:true,
+                          message:'Successfull login!',
+                          token: token
+                       });
 
-
-
-            }
+                  }
 
           }
 
