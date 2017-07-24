@@ -21,6 +21,7 @@ mongoose.connect(config.db_local, function(err){
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(morgan('dev'));
+//expose public method for ui
 app.use(express.static(__dirname + '/public'));
 
 app.use('/api',api);
