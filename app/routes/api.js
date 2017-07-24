@@ -101,6 +101,7 @@ module.exports = function(app,express){
            }
     });
 
+ 
     //destination -provide a legitimate token
    api.route('/')
 
@@ -130,5 +131,10 @@ module.exports = function(app,express){
        });
     });
 
+    
+
+   api.get('/me',function(req,res){
+     res.json(req.decoded);
+    });
     return api;
 }

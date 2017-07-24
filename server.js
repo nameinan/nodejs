@@ -21,12 +21,13 @@ mongoose.connect(config.db_local, function(err){
 app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 app.use(morgan('dev'));
+app.use(express.static(__dirname + '/public'));
 
 app.use('/api',api);
-/*
+
 app.get('*', function(req,res){
-	res.sendFile(__dirname + '/public/views/index.html')
-})*/
+	res.sendFile(__dirname + '/public/app/views/index.html')
+})
 
 app.get('/test', function(req,res){
     res.write('Just a test server');
