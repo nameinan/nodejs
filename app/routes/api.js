@@ -56,34 +56,55 @@ module.exports = function(app,express){
 
 
     api.post('/login',function(req,res){
-      User.findOne({
-        name:req.body.name
-      }).select('password').exec(function(err,user){
-          if (err) {
-            throw err
-          }
-          if (!user) {
-            res.send({message:'User does not exist'});
-          }else if (user) {
-                      var validPassword = user.comparePassword(req.body.password);
-                      if (!validPassword) {
-                       res.send({message:'Invalid  Password'});
-                  }
-                  else{
-                       const token = createToken(user);
-                       res.json({
-                          success:true,
-                          message:'Successfull login!',
-                          token: token
-                       });
+              User.findOne({
+                      name:req.body.name
+                    }).select('password').exec(function(err,user){
+                        if (err) {
+                          throw err
+                        }
+                        if (!user) {
+                          res.send({message:'User does not exist'});
+                        }else if (user) {
+                                    var validPassword = user.comparePassword(req.body.password);
+                                    if (!validPassword) {
+                                     res.send({message:'Invalid  Password'});
+                                }
+                                else{
+                                     const token = createToken(user);
+                                     res.json({
+                                        success:true,
+                                        message:'Successfull login!',
+                                        token: token
+                                     });
 
-                  }
-
-          }
-
-      });
-
+                               }
+                        }
+              });
     });
+
+    //middle ware
+    api.use(function(req,res,next){
+           console.log('Somebody just login application');
+           const token = req.body.token || req.param('token')|| req.header('x-access-token');
+           if (token) {
+               jsonwebtoken.verify(token,secretKey,function(err,decoded){
+                   if (err) {
+                      res.status(403).send({success:false,message:'Failure to authenticate user'});
+                   }else{
+                       res.decoded=decoded;
+                       next();
+                   }
+               });
+           }else{
+               res.status(403).send({success:false,message:'No token provided'});
+           }
+    });
+
+    //destination -provide a legitimate token
+
+    api.get('/',function(req,res){
+           res.send('Hello world');
+    })
 
     return api;
 }
