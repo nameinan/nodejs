@@ -23,9 +23,10 @@ app.use(bodyParser.json())
 app.use(morgan('dev'));
 
 app.use('/api',api);
+/*
 app.get('*', function(req,res){
 	res.sendFile(__dirname + '/public/views/index.html')
-})
+})*/
 
 app.get('/test', function(req,res){
     res.write('Just a test server');

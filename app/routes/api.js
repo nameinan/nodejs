@@ -1,11 +1,12 @@
 const User = require('../models/user');
 const config = require('../../config');
+const Story = require('../models/story');
 const secretKey =  config.secretKey;
 const jsonwebtoken = require('jsonwebtoken');
 
 function createToken(user){
       const token= jsonwebtoken.sign({
-            _id:user._id,
+            id:user._id,
             name:user.name,
             username:user.username
           },
@@ -91,7 +92,7 @@ module.exports = function(app,express){
                    if (err) {
                       res.status(403).send({success:false,message:'Failure to authenticate user'});
                    }else{
-                       res.decoded=decoded;
+                       req.decoded=decoded;
                        next();
                    }
                });
@@ -101,10 +102,33 @@ module.exports = function(app,express){
     });
 
     //destination -provide a legitimate token
+   api.route('/')
 
-    api.get('/',function(req,res){
-           res.send('Hello world');
+    .post(function(req,res){
+        const story = new Story({
+          caeator : req.decoded.id,
+          content: req.body.content
+          })
+        story.save(function(err){
+            if (err) {
+              res.send(err);
+              return;
+            }
+            res.send({message:'Story is created'});
+        }); 
     })
+
+    .get(function(req,res){
+       Story.find({
+        caeator : req.decoded.id
+       },function(err,stories){
+            if (err) {
+               res.send(err);
+                return;
+            }
+          res.json(stories);
+       });
+    });
 
     return api;
 }
