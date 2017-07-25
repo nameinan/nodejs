@@ -1,1 +1,1 @@
-angular.module('MyApp',[]);
+angular.module('MyApp',['appRoutes','MainCtrl','authService']);

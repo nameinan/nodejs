@@ -10,7 +10,7 @@ angular.module('authService',[])
 		})
 		.sucess(function(data){
 			AuthToken.setToken(data.token);
-			retur data;
+			return data;
 		})
 	}
 
@@ -56,7 +56,7 @@ angular.module('authService',[])
 	}
 
    return authFactory;
-});
+})
 
 
 

@@ -15,7 +15,6 @@ angular.module('MainCtrl',[])
    });
 
 
-
    vm.doLogin = function(){
    	 vm.processing = true;
    	 vm.error ="";
